@@ -3,6 +3,7 @@ import 'package:recibo/screens/agenda/helpers/agenda_helper.dart';
 import 'package:recibo/drawer/drawer_navigation.dart';
 import 'package:recibo/screens/agenda/models/agenda.dart';
 import 'package:share/share.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class AgendaScreen extends StatefulWidget {
   @override
@@ -13,9 +14,13 @@ class _AgendaScreenState extends State<AgendaScreen> {
   TextEditingController _tituloController = TextEditingController();
   TextEditingController _descricaoController = TextEditingController();
   TextEditingController _calendarioController = TextEditingController();
+
   var _db = AgendaHelper();
   // ignore: deprecated_member_use
   List<Agenda> _agendas = List<Agenda>();
+
+  var maskFormatter = new MaskTextInputFormatter(
+      mask: '##/##/## ##:##', filter: {"#": RegExp(r'[0-9]')});
 
   _exibirTelaCadastro({Agenda agenda}) {
     String textoSalvarAtualizar = '';
@@ -46,11 +51,12 @@ class _AgendaScreenState extends State<AgendaScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     TextField(
+                      inputFormatters: [maskFormatter],
                       controller: _calendarioController,
                       autofocus: true,
                       decoration: InputDecoration(
                         labelText: "Calendario",
-                        hintText: "01/01/2021 12:00",
+                        hintText: "01/01/21 12:00",
                       ),
                       keyboardType: TextInputType.number,
                     ),

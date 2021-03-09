@@ -10,7 +10,7 @@ class MySplashScreen extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           SplashScreen(
-            seconds: 2,
+            seconds: 1,
             navigateAfterSeconds: AgendaScreen(),
             loaderColor: Colors.transparent,
           ),
