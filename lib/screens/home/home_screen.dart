@@ -1,6 +1,11 @@
-/* import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:recibo/screens/agenda/agenda_screen.dart';
 import 'package:recibo/screens/recibo/receipt_screen.dart';
+
+enum CurrentPage {
+  recibo,
+  agenda,
+}
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -8,13 +13,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  CurrentPage selectedPage;
   int _indiceAtual = 0;
+
+  bool current = false;
 
   @override
   Widget build(BuildContext context) {
     List<Widget> screens = [
-      AgendaScreen(),
       Receipt(),
+      AgendaScreen(),
     ];
 
     return Scaffold(
@@ -33,20 +41,19 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             type: BottomNavigationBarType.fixed,
             fixedColor: Colors.white,
-            backgroundColor: Color(0xff0a0e21).withOpacity(.9),
+            backgroundColor: Color(0xff1a1a1a),
             items: [
               BottomNavigationBarItem(
-                label: 'Agenda',
+                label: 'Recibos',
                 icon: Icon(
-                  Icons.calendar_today_rounded,
+                  Icons.receipt_long,
                   size: 35,
                 ),
               ),
               BottomNavigationBarItem(
-                //backgroundColor: Colors.red,
-                label: 'Recibos',
+                label: 'Agenda',
                 icon: Icon(
-                  Icons.receipt_long,
+                  Icons.calendar_today_rounded,
                   size: 35,
                 ),
               ),
@@ -55,4 +62,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
- */

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:recibo/screens/agenda/agenda_screen.dart';
+import 'package:recibo/screens/home/home_screen.dart';
 import 'package:splashscreen/splashscreen.dart';
 
 class MySplashScreen extends StatelessWidget {
@@ -11,23 +11,23 @@ class MySplashScreen extends StatelessWidget {
         children: [
           SplashScreen(
             seconds: 1,
-            navigateAfterSeconds: AgendaScreen(),
-            loaderColor: Colors.transparent,
+            navigateAfterSeconds: HomeScreen(),
+            loaderColor: Colors.white,
           ),
           Container(
             decoration: BoxDecoration(
+              color: Color(0xff1a1a1a),
               image: DecorationImage(
-                fit: BoxFit.cover,
+                fit: BoxFit.fitWidth,
                 image: ExactAssetImage(
                   'images/receipt.png',
                 ),
               ),
             ),
             child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(35.0),
+              child: Center(
                 child: Text(
-                  'Agenda \n& \nRecibo',
+                  'AGENDA \n& \nRECIBO',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 50,

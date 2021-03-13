@@ -1,5 +1,12 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:recibo/drawer/drawer_navigation.dart';
+import 'package:recibo/components/buttons.dart';
+import 'package:recibo/components/components.dart';
+import 'package:recibo/components/constants.dart';
+import 'package:recibo/components/dados_tile.dart';
+import 'package:recibo/components/delete_data.dart';
+import 'package:recibo/components/list_tile_button.dart';
+import 'package:recibo/components/my_container.dart';
 import 'package:recibo/screens/recibo/helper/anotacao_helper.dart';
 import 'package:recibo/screens/recibo/model/anotacao.dart';
 import 'package:intl/intl.dart';
@@ -35,97 +42,75 @@ class _ReceiptState extends State<Receipt> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text("Recebimento"),
-          content: Builder(
-            builder: (context) {
-              return Container(
-                width: double.infinity,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    TextField(
-                      controller: _tituloController,
-                      autofocus: true,
-                      decoration: InputDecoration(
-                          labelText: "Nome", hintText: "Digite o nome..."),
-                    ),
-                    TextField(
-                      controller: _descricaoController,
-                      decoration: InputDecoration(
-                          labelText: "Descrição",
-                          hintText: "Digite descrição..."),
-                    ),
-                    TextField(
-                      controller: _valorController,
-                      decoration: InputDecoration(
-                        labelText: "Valor",
-                        prefixText: 'R\$ ',
+        return DialogScreen(
+          alertTitle: 'Recebimento',
+          myWidget: Column(
+            children: [
+              TextField(
+                style: kTextFieldColor,
+                controller: _tituloController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  labelText: "Nome",
+                  labelStyle: kTextFieldColor,
+                  hintText: "Digite o nome...",
+                  hintStyle: kTextFieldColor,
+                ),
+              ),
+              TextField(
+                style: kTextFieldColor,
+                controller: _descricaoController,
+                decoration: InputDecoration(
+                  labelText: "Descrição",
+                  labelStyle: kTextFieldColor,
+                  hintText: "Digite descrição...",
+                  hintStyle: kTextFieldColor,
+                ),
+              ),
+              TextField(
+                style: kTextFieldColor,
+                controller: _valorController,
+                decoration: InputDecoration(
+                  labelText: "Valor",
+                  labelStyle: kTextFieldColor,
+                  prefixText: 'R\$ ',
+                  prefixStyle: kTextFieldColor,
+                ),
+                keyboardType: TextInputType.number,
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: MyButtons(
+                        bgColour: Colors.redAccent,
+                        textColour: Colors.white,
+                        title: 'Cancelar',
+                        onPress: () => Navigator.pop(context),
                       ),
-                      keyboardType: TextInputType.number,
                     ),
                     SizedBox(
-                      height: 20,
+                      width: 15,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 100,
-                          height: 50,
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              backgroundColor: Colors.redAccent,
-                              primary: Colors.white,
-                            ),
-                            onPressed: () => Navigator.pop(context),
-                            child: Text(
-                              "Cancelar",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        SizedBox(
-                          width: 100,
-                          height: 50,
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              backgroundColor: Color(0xff009933),
-                              primary: Colors.white,
-                            ),
-                            onPressed: () {
-                              //salvar
-                              _salvarAtualizarAnotacao(
-                                  anotacaoSelecionada: anotacao);
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              textoSalvarAtualizar,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                    Expanded(
+                      child: MyButtons(
+                        bgColour: Color(0xff009933),
+                        textColour: Colors.white,
+                        title: textoSalvarAtualizar,
+                        onPress: () {
+                          //salvar
+                          _salvarAtualizarAnotacao(
+                              anotacaoSelecionada: anotacao);
+                          Navigator.pop(context);
+                        },
+                      ),
                     ),
                   ],
                 ),
-              );
-            },
+              ),
+            ],
           ),
         );
       },
@@ -237,10 +222,20 @@ class _ReceiptState extends State<Receipt> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: Color(0xff0a0e21),
+        backgroundColor: kdefaultColor,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.add_circle,
+              size: 32,
+            ),
+            onPressed: () {
+              _exibirTelaCadastro();
+            },
+          ),
+        ],
       ),
-      drawer: DrawerScreen(),
       body: Column(
         children: [
           Expanded(
@@ -248,219 +243,83 @@ class _ReceiptState extends State<Receipt> {
               itemCount: _anotacoes.length,
               itemBuilder: (context, index) {
                 final anotacao = _anotacoes[index];
-                return Container(
-                  margin: EdgeInsets.all(16),
-                  height: MediaQuery.of(context).size.height * .30,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Color(0xff0a0e21),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: ListTile(
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                return MyContainer(
+                    myChild: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: DadosTile(
+                        dadosText:
+                            '${anotacao.id} - ${_formatarData(anotacao.data)}'
+                            '\n'
+                            '\n${anotacao.titulo}',
+                      ),
+                    ),
+                    Expanded(
+                      child: DadosTile(
+                        dadosText: '${anotacao.descricao} \n'
+                            'R\$ ${anotacao.valor}',
+                      ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Expanded(
-                            child: Text(
-                              '${anotacao.id} - ${_formatarData(anotacao.data)}'
-                              '\n'
-                              '\n${anotacao.titulo}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Colors.white,
+                            child: ListTileButton(
+                              onPress: () => share(context, anotacao),
+                              myIcon: Icon(
+                                Icons.share_sharp,
+                                size: 30,
+                                color: Colors.indigo,
                               ),
                             ),
                           ),
                           Expanded(
-                            child: Text(
-                              '${anotacao.descricao} \n'
-                              'R\$ ${anotacao.valor}',
-                              style: TextStyle(
-                                color: Colors.white,
-                                height: 1.5,
+                            child: ListTileButton(
+                              onPress: () {
+                                _exibirTelaCadastro(anotacao: anotacao);
+                              },
+                              myIcon: Icon(
+                                Icons.edit,
+                                size: 30,
+                                color: Colors.green,
                               ),
                             ),
                           ),
                           Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () => share(context, anotacao),
-                                    child: Icon(
-                                      Icons.share_sharp,
-                                      size: 30,
-                                      color: Colors.indigo,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 28,
-                                ),
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      _exibirTelaCadastro(anotacao: anotacao);
-                                    },
-                                    child: Icon(
-                                      Icons.edit,
-                                      size: 30,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 28,
-                                ),
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            insetPadding: EdgeInsets.symmetric(
-                                              horizontal: 10,
-                                              vertical: 10,
-                                            ),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(
-                                                  10.0,
-                                                ),
-                                              ),
-                                            ),
-                                            title: Text(
-                                              "Excluir Recebimento",
-                                            ),
-                                            content: Builder(
-                                              builder: (context) {
-                                                return Container(
-                                                  width: double.infinity,
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        'Confirmar Exclusão?',
-                                                        style: TextStyle(
-                                                          fontSize: 22,
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          SizedBox(
-                                                            width: 100,
-                                                            height: 50,
-                                                            child: TextButton(
-                                                              style: TextButton
-                                                                  .styleFrom(
-                                                                backgroundColor:
-                                                                    Colors.red,
-                                                                primary: Colors
-                                                                    .white,
-                                                              ),
-                                                              onPressed: () =>
-                                                                  Navigator.pop(
-                                                                      context),
-                                                              child: Text(
-                                                                "Cancelar",
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontSize: 20,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 15,
-                                                          ),
-                                                          SizedBox(
-                                                            width: 100,
-                                                            height: 50,
-                                                            child: TextButton(
-                                                              style: TextButton
-                                                                  .styleFrom(
-                                                                backgroundColor:
-                                                                    Color(
-                                                                        0xff009933),
-                                                                primary: Colors
-                                                                    .white,
-                                                              ),
-                                                              onPressed: () {
-                                                                _removerAnotacao(
-                                                                    anotacao
-                                                                        .id);
+                            child: ListTileButton(
+                              onPress: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return DeleteData(
+                                        alertTitle: 'Excluir Recebimento',
+                                        onTap: () {
+                                          _removerAnotacao(anotacao.id);
 
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              child: Text(
-                                                                'Confirmar',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontSize: 20,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          );
+                                          Navigator.pop(context);
                                         },
                                       );
-                                    },
-                                    child: Icon(
-                                      Icons.remove_circle,
-                                      size: 30,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                )
-                              ],
+                                    });
+                              },
+                              myIcon: Icon(
+                                Icons.remove_circle,
+                                size: 30,
+                                color: Colors.red,
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                );
+                  ],
+                ));
               },
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xffff0040),
-        foregroundColor: Colors.white,
-        child: Icon(Icons.add),
-        onPressed: () {
-          _exibirTelaCadastro();
-        },
       ),
     );
   }

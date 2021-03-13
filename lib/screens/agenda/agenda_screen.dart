@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:recibo/components/buttons.dart';
+import 'package:recibo/components/components.dart';
+import 'package:recibo/components/constants.dart';
+import 'package:recibo/components/dados_tile.dart';
+import 'package:recibo/components/delete_data.dart';
+import 'package:recibo/components/list_tile_button.dart';
+import 'package:recibo/components/my_container.dart';
 import 'package:recibo/screens/agenda/helpers/agenda_helper.dart';
-import 'package:recibo/drawer/drawer_navigation.dart';
 import 'package:recibo/screens/agenda/models/agenda.dart';
 import 'package:share/share.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -38,99 +44,75 @@ class _AgendaScreenState extends State<AgendaScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text("Agenda"),
-          content: Builder(
-            builder: (context) {
-              return Container(
-                width: double.infinity,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    TextField(
-                      inputFormatters: [maskFormatter],
-                      controller: _calendarioController,
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        labelText: "Calendario",
-                        hintText: "01/01/21 12:00",
+        return DialogScreen(
+          alertTitle: 'Agenda',
+          myWidget: Column(
+            children: [
+              TextField(
+                inputFormatters: [maskFormatter],
+                style: kTextFieldColor,
+                controller: _calendarioController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  labelText: "Calendario",
+                  labelStyle: kTextFieldColor,
+                  hintStyle: kTextFieldColor,
+                  hintText: "01/01/21 12:00",
+                ),
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
+                style: kTextFieldColor,
+                controller: _tituloController,
+                decoration: InputDecoration(
+                  labelText: "Nome",
+                  labelStyle: kTextFieldColor,
+                  hintStyle: kTextFieldColor,
+                  hintText: "Digite o nome...",
+                ),
+              ),
+              TextField(
+                style: kTextFieldColor,
+                controller: _descricaoController,
+                decoration: InputDecoration(
+                  labelText: "Descrição",
+                  labelStyle: kTextFieldColor,
+                  hintStyle: kTextFieldColor,
+                  hintText: "Digite descrição...",
+                ),
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: MyButtons(
+                        bgColour: Colors.redAccent,
+                        textColour: Colors.white,
+                        title: 'Cancelar',
+                        onPress: () => Navigator.pop(context),
                       ),
-                      keyboardType: TextInputType.number,
-                    ),
-                    TextField(
-                      controller: _tituloController,
-                      decoration: InputDecoration(
-                        labelText: "Nome",
-                        hintText: "Digite o nome...",
-                      ),
-                    ),
-                    TextField(
-                      controller: _descricaoController,
-                      decoration: InputDecoration(
-                          labelText: "Descrição",
-                          hintText: "Digite descrição..."),
                     ),
                     SizedBox(
-                      height: 20,
+                      width: 15,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 100,
-                          height: 50,
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              backgroundColor: Colors.redAccent,
-                              primary: Colors.white,
-                            ),
-                            onPressed: () => Navigator.pop(context),
-                            child: Text(
-                              "Cancelar",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        SizedBox(
-                          width: 100,
-                          height: 50,
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              backgroundColor: Color(0xff009933),
-                              primary: Colors.white,
-                            ),
-                            onPressed: () {
-                              //salvar
-                              _salvarAtualizarAgenda(agendaSelecionada: agenda);
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              textoSalvarAtualizar,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                    Expanded(
+                      child: MyButtons(
+                        bgColour: Color(0xff009933),
+                        textColour: Colors.white,
+                        title: textoSalvarAtualizar,
+                        onPress: () {
+                          //salvar
+                          _salvarAtualizarAgenda(agendaSelecionada: agenda);
+                          Navigator.pop(context);
+                        },
+                      ),
                     ),
                   ],
                 ),
-              );
-            },
+              ),
+            ],
           ),
         );
       },
@@ -231,8 +213,18 @@ class _AgendaScreenState extends State<AgendaScreen> {
         centerTitle: true,
         backgroundColor: Color(0xff0a0e21),
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.add_alert,
+              size: 32,
+            ),
+            onPressed: () {
+              _exibirTelaCadastro();
+            },
+          ),
+        ],
       ),
-      drawer: DrawerScreen(),
       body: Column(
         children: [
           Expanded(
@@ -240,225 +232,84 @@ class _AgendaScreenState extends State<AgendaScreen> {
               itemCount: _agendas.length,
               itemBuilder: (context, index) {
                 final agenda = _agendas[index];
-                return Container(
-                  margin: EdgeInsets.all(16),
-                  height: MediaQuery.of(context).size.height * .20,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Color(0xff0a0e21),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: ListTile(
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                return MyContainer(
+                    myChild: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: DadosTile(
+                        dadosText: 'Data Evento: ${agenda.calendario}',
+                      ),
+                    ),
+                    Expanded(
+                      child: DadosTile(
+                        dadosText: '${agenda.titulo}',
+                      ),
+                    ),
+                    Expanded(
+                      child: DadosTile(
+                        dadosText: '${agenda.descricao} \n',
+                      ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Expanded(
-                            child: Text(
-                              'Data Evento: ${agenda.calendario}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Colors.white,
+                            child: ListTileButton(
+                              onPress: () => share(context, agenda),
+                              myIcon: Icon(
+                                Icons.share_sharp,
+                                size: 30,
+                                color: Colors.indigo,
                               ),
                             ),
                           ),
                           Expanded(
-                            child: Text(
-                              '${agenda.titulo}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Colors.white,
+                            child: ListTileButton(
+                              onPress: () {
+                                _exibirTelaCadastro(agenda: agenda);
+                              },
+                              myIcon: Icon(
+                                Icons.edit,
+                                size: 30,
+                                color: Colors.green,
                               ),
                             ),
                           ),
                           Expanded(
-                            child: Text(
-                              '${agenda.descricao} \n',
-                              style: TextStyle(
-                                color: Colors.white,
-                                height: 1.5,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () => share(context, agenda),
-                                    child: Icon(
-                                      Icons.share_sharp,
-                                      size: 30,
-                                      color: Colors.indigoAccent,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 28,
-                                ),
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      _exibirTelaCadastro(agenda: agenda);
-                                    },
-                                    child: Icon(
-                                      Icons.edit,
-                                      size: 30,
-                                      color: Colors.greenAccent,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 28,
-                                ),
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            insetPadding: EdgeInsets.symmetric(
-                                              horizontal: 10,
-                                              vertical: 10,
-                                            ),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(
-                                                  10.0,
-                                                ),
-                                              ),
-                                            ),
-                                            title: Text(
-                                              "Excluir Recebimento",
-                                            ),
-                                            content: Builder(
-                                              builder: (context) {
-                                                return Container(
-                                                  width: double.infinity,
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        'Confirmar Exclusão?',
-                                                        style: TextStyle(
-                                                          fontSize: 22,
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          SizedBox(
-                                                            width: 100,
-                                                            height: 50,
-                                                            child: TextButton(
-                                                              style: TextButton
-                                                                  .styleFrom(
-                                                                backgroundColor:
-                                                                    Colors.red,
-                                                                primary: Colors
-                                                                    .white,
-                                                              ),
-                                                              onPressed: () =>
-                                                                  Navigator.pop(
-                                                                      context),
-                                                              child: Text(
-                                                                "Cancelar",
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontSize: 20,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 15,
-                                                          ),
-                                                          SizedBox(
-                                                            width: 100,
-                                                            height: 50,
-                                                            child: TextButton(
-                                                              style: TextButton
-                                                                  .styleFrom(
-                                                                backgroundColor:
-                                                                    Color(
-                                                                        0xff009933),
-                                                                primary: Colors
-                                                                    .white,
-                                                              ),
-                                                              onPressed: () {
-                                                                _removerAgenda(
-                                                                    agenda.id);
+                            child: ListTileButton(
+                              onPress: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return DeleteData(
+                                        alertTitle: 'Excluir Evento',
+                                        onTap: () {
+                                          _removerAgenda(agenda.id);
 
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              child: Text(
-                                                                'Confirmar',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontSize: 20,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          );
+                                          Navigator.pop(context);
                                         },
                                       );
-                                    },
-                                    child: Icon(
-                                      Icons.remove_circle,
-                                      size: 30,
-                                      color: Colors.redAccent,
-                                    ),
-                                  ),
-                                )
-                              ],
+                                    });
+                              },
+                              myIcon: Icon(
+                                Icons.remove_circle,
+                                size: 30,
+                                color: Colors.red,
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                );
+                  ],
+                ));
               },
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xffff0040),
-        foregroundColor: Colors.white,
-        child: Icon(Icons.add),
-        onPressed: () {
-          _exibirTelaCadastro();
-        },
       ),
     );
   }
