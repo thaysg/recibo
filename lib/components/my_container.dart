@@ -9,7 +9,7 @@ class MyContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(16),
-      height: MediaQuery.of(context).size.height * .30,
+      height: MediaQuery.of(context).size.height * .24,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         color: kdefaultColor,

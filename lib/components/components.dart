@@ -24,7 +24,7 @@ class DialogScreen extends StatelessWidget {
         builder: (context) {
           return Container(
             width: double.infinity,
-            height: MediaQuery.of(context).size.height * .35,
+            height: MediaQuery.of(context).size.height * .39,
             child: myWidget,
           );
         },

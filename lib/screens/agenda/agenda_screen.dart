@@ -243,12 +243,8 @@ class _AgendaScreenState extends State<AgendaScreen> {
                     ),
                     Expanded(
                       child: DadosTile(
-                        dadosText: '${agenda.titulo}',
-                      ),
-                    ),
-                    Expanded(
-                      child: DadosTile(
-                        dadosText: '${agenda.descricao} \n',
+                        dadosText: '${agenda.titulo} \n'
+                            '${agenda.descricao} \n',
                       ),
                     ),
                     Expanded(
@@ -262,7 +258,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
                               myIcon: Icon(
                                 Icons.share_sharp,
                                 size: 30,
-                                color: Colors.indigo,
+                                color: Colors.indigo[900],
                               ),
                             ),
                           ),
@@ -274,7 +270,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
                               myIcon: Icon(
                                 Icons.edit,
                                 size: 30,
-                                color: Colors.green,
+                                color: Colors.green[900],
                               ),
                             ),
                           ),
@@ -297,7 +293,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
                               myIcon: Icon(
                                 Icons.remove_circle,
                                 size: 30,
-                                color: Colors.red,
+                                color: Colors.red[900],
                               ),
                             ),
                           ),

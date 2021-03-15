@@ -41,7 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             type: BottomNavigationBarType.fixed,
             fixedColor: Colors.white,
-            backgroundColor: Color(0xff1a1a1a),
+            backgroundColor:
+                Color(0xff212121).withAlpha(50), //Color(0xff1a1a1a),
             items: [
               BottomNavigationBarItem(
                 label: 'Recibos',

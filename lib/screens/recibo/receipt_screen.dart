@@ -12,6 +12,7 @@ import 'package:recibo/screens/recibo/model/anotacao.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:share/share.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class Receipt extends StatefulWidget {
   @override
@@ -25,6 +26,9 @@ class _ReceiptState extends State<Receipt> {
   var _db = AnotacaoHelper();
   // ignore: deprecated_member_use
   List<Anotacao> _anotacoes = List<Anotacao>();
+
+  var maskFormatter = new MaskTextInputFormatter(
+      mask: '##,##', filter: {"#": RegExp(r'[0-9]')});
 
   _exibirTelaCadastro({Anotacao anotacao}) {
     String textoSalvarAtualizar = '';
@@ -51,33 +55,53 @@ class _ReceiptState extends State<Receipt> {
                 controller: _tituloController,
                 autofocus: true,
                 decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  prefixIcon: Icon(
+                    Icons.person,
+                  ),
                   labelText: "Nome",
                   labelStyle: kTextFieldColor,
                   hintText: "Digite o nome...",
                   hintStyle: kTextFieldColor,
                 ),
               ),
+              Divider(),
               TextField(
                 style: kTextFieldColor,
                 controller: _descricaoController,
                 decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  prefixIcon: Icon(Icons.description),
                   labelText: "Descrição",
                   labelStyle: kTextFieldColor,
                   hintText: "Digite descrição...",
                   hintStyle: kTextFieldColor,
                 ),
+                keyboardType: TextInputType.name,
               ),
+              Divider(),
               TextField(
+                //inputFormatters: [maskFormatter],
                 style: kTextFieldColor,
                 controller: _valorController,
                 decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
                   labelText: "Valor",
                   labelStyle: kTextFieldColor,
-                  prefixText: 'R\$ ',
+                  prefixIcon: Icon(Icons.monetization_on),
                   prefixStyle: kTextFieldColor,
+                  hintText: '100,00',
+                  hintStyle: kTextFieldColor,
                 ),
                 keyboardType: TextInputType.number,
               ),
+              Divider(),
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -85,7 +109,7 @@ class _ReceiptState extends State<Receipt> {
                   children: [
                     Expanded(
                       child: MyButtons(
-                        bgColour: Colors.redAccent,
+                        bgColour: Colors.red[900],
                         textColour: Colors.white,
                         title: 'Cancelar',
                         onPress: () => Navigator.pop(context),
@@ -96,7 +120,7 @@ class _ReceiptState extends State<Receipt> {
                     ),
                     Expanded(
                       child: MyButtons(
-                        bgColour: Color(0xff009933),
+                        bgColour: Colors.green[900],
                         textColour: Colors.white,
                         title: textoSalvarAtualizar,
                         onPress: () {
@@ -222,7 +246,7 @@ class _ReceiptState extends State<Receipt> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: kdefaultColor,
+        backgroundColor: Color(0xff0a0e21),
         elevation: 0,
         actions: [
           IconButton(
@@ -250,15 +274,17 @@ class _ReceiptState extends State<Receipt> {
                     Expanded(
                       child: DadosTile(
                         dadosText:
-                            '${anotacao.id} - ${_formatarData(anotacao.data)}'
-                            '\n'
-                            '\n${anotacao.titulo}',
+                            '${anotacao.id} - ${_formatarData(anotacao.data)}',
                       ),
                     ),
                     Expanded(
                       child: DadosTile(
-                        dadosText: '${anotacao.descricao} \n'
-                            'R\$ ${anotacao.valor}',
+                          dadosText: '${anotacao.titulo} \n'
+                              '${anotacao.descricao}'),
+                    ),
+                    Expanded(
+                      child: DadosTile(
+                        dadosText: 'R\$ ${anotacao.valor}',
                       ),
                     ),
                     Expanded(
@@ -272,7 +298,7 @@ class _ReceiptState extends State<Receipt> {
                               myIcon: Icon(
                                 Icons.share_sharp,
                                 size: 30,
-                                color: Colors.indigo,
+                                color: Colors.indigo[900],
                               ),
                             ),
                           ),
@@ -284,7 +310,7 @@ class _ReceiptState extends State<Receipt> {
                               myIcon: Icon(
                                 Icons.edit,
                                 size: 30,
-                                color: Colors.green,
+                                color: Colors.green[900],
                               ),
                             ),
                           ),
@@ -307,7 +333,7 @@ class _ReceiptState extends State<Receipt> {
                               myIcon: Icon(
                                 Icons.remove_circle,
                                 size: 30,
-                                color: Colors.red,
+                                color: Colors.red[900],
                               ),
                             ),
                           ),

@@ -4,7 +4,7 @@ const kTextFieldColor = TextStyle(
   color: Colors.white,
   fontSize: 20,
 );
-const kdefaultColor = Color(0xff0a0e21);
+const kdefaultColor = Color(0xff448AFF); //Color(0xff0a0e21);
 
 const kDialogButton = TextStyle(
   fontWeight: FontWeight.bold,
@@ -14,13 +14,13 @@ const kDialogButton = TextStyle(
 const kDadosTile = TextStyle(
   fontWeight: FontWeight.bold,
   fontSize: 18,
-  color: Colors.white,
+  color: Colors.black,
 );
 
 const ktitleTextStyle = TextStyle(
   fontSize: 22.0,
   fontWeight: FontWeight.bold,
-  color: Colors.white,
+  color: Colors.black,
 );
 
 const messuaresTextStyle = TextStyle(
