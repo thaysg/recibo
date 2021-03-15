@@ -1,16 +1,11 @@
-# recibo
+Aplicativo de Agenda e Recibos
 
-A new Flutter project.
+Aplicativo Flutter para agenda e comprovantes de pagamentos utilizando como banco de dados o SQFLITE.
 
-## Getting Started
+Armazena dados, como data e hora, assim como nome, descrição e valores.
 
-This project is a starting point for a Flutter application.
+É um aplicativo simples, que surgiu mais como uma necessidade de uso particular, já que trabalho com manutenção de computadores e aulas, é uma ferramenta para controle, assim que um cliente efetua um pagamento, encaminho o comprovante para ele através das redes sociais.
 
-A few resources to get you started if this is your first Flutter project:
+Ainda falta mais algumas implementações que desejo fazer no futuro, como por exemplo, salvar os dados em formatar pdf para encaminhar ao cliente.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![agenda](https://user-images.githubusercontent.com/53340410/111236097-d8af7000-85d0-11eb-8ea2-97b08e452992.gif)
